@@ -4,8 +4,9 @@
 FUSION_TABLES_URI = 'https://www.googleapis.com/fusiontables/v2'
 
 GOOGLE_API_KEY = 'AIzaSyBoQNYbbHb-MEGa4_oq83_JCLt9cKfd4vg'
+HASH_SALT = '1vMTI1_2gipUt1VMZWHvrGNARRLWjDmDshAOFTAoE'
 # Fusion Tables ID of the username index
-OKC_TABLE_ID = '1vMTI1_2gipUt1VMZWHvrGNARRLWjDmDshAOFTAoE'
+OKC_TABLE_ID = '1yVT45SoCw3mf2H4mD6Z6EgmbjkttH-ooN29s_VHT'
 
 html_id = (input) ->
   input.replace(/[\/:$.,'-]/g,'_')
@@ -37,7 +38,7 @@ fusion_tables_query = (query, callback, error_callback) ->
 
 process_username = (username) ->
   $('#results').empty()
-  hashed_username = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash("#{username}-#{OKC_TABLE_ID}"))
+  hashed_username = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash("#{username}-#{HASH_SALT}".toLowerCase()))
   fusion_tables_query "SELECT username FROM #{OKC_TABLE_ID} WHERE username = #{fusion_tables_escape(hashed_username)}",
     (data) ->
       if data.rows?
