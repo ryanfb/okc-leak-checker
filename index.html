@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <!-- Twitter Bootstrap -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <!-- OKC Leak Checker -->
+    <script src="js/okc-leak-checker.js"></script>
+    <!-- SJCL http://bitwiseshiftleft.github.io/sjcl/ -->
+    <script src="js/sjcl.js"></script>
+    <title>OKCupid Leak Checker</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+        <a href="https://github.com/ryanfb/okc-leak-checker/" role="button" class="btn btn-primary" style="float:right" target="_blank">View on GitHub</a>
+        <h1>OKCupid Leak Checker</h1>
+        <p>Check if your OKCupid username was included in the recent (May 2016) OKCupid scraped data dump.</p>
+        <p>Related links:</p>
+        <ul>
+          <li><a href="http://motherboard.vice.com/read/70000-okcupid-users-just-had-their-data-published" target="_blank">70,000 OkCupid Users Just Had Their Data Published</a></li>
+          <li><a href="https://ironholds.org/blog/when-science-goes-bad-consent-data-and-doubling-down-on-the-internet/" target="_blank">Scientific consent, data, and doubling down on the internet</a></li>
+          <li><a href="https://docs.google.com/document/d/1xjSi8gFT8B2jw-O8jhXykfSusggheBl-s3ud2YBca3E/edit" target="_blank">Open letter to Aarhus University</a></li>
+        </ul>
+      </div>
+      <div class="row">
+        <form id="identifier_form">
+          <div class="col-xs-8 col-md-10">
+            <input type="text" id="identifier_input" name="identifier" style="width:100%">
+          </div>
+          <div class="col-xs-4 col-md-2">
+            <input type="submit" value="Submit" style="width:100%">
+          </div>
+        </form>
+      </div>
+      <br/>
+      <div id="results"/> 
+      <br/>
+      <div class="row">
+        <div class="col-xs-12" id="loadingDiv" style="text-align:center">
+          <img src="http://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif"/>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
