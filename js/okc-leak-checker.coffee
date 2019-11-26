@@ -1,50 +1,32 @@
 ---
 ---
 
-FUSION_TABLES_URI = 'https://www.googleapis.com/fusiontables/v2'
-
-GOOGLE_API_KEY = 'AIzaSyBoQNYbbHb-MEGa4_oq83_JCLt9cKfd4vg'
 HASH_SALT = '1vMTI1_2gipUt1VMZWHvrGNARRLWjDmDshAOFTAoE'
-# Fusion Tables ID of the username index
-OKC_TABLE_ID = '1yVT45SoCw3mf2H4mD6Z6EgmbjkttH-ooN29s_VHT'
+OKC_HASHED_USERNAMES = []
 
-html_id = (input) ->
-  input.replace(/[\/:$.,'-]/g,'_')
-
-# wrap values in single quotes and backslash-escape single-quotes
-fusion_tables_escape = (value) ->
-  "'#{value.replace(/'/g,"\\\'")}'"
-
-fusion_tables_query = (query, callback, error_callback) ->
-  console.log "Query: #{query}"
-  switch query.split(' ')[0]
-    when 'SELECT'
-      $.ajax "#{FUSION_TABLES_URI}/query?sql=#{query}&key=#{GOOGLE_API_KEY}",
-        type: 'GET'
-        dataType: 'json'
-        crossDomain: true
-        error: (jqXHR, textStatus, errorThrown) ->
-          # $('#results').append($('<div/>',{class: 'alert alert-danger', role: 'alert'}).text("Error in Fusion Tables AJAX call."))
-          console.log jqXHR
-          console.log errorThrown
-          console.log "AJAX Error: #{textStatus}"
-          error_callback() if error_callback?
-          console.log "Retrying Fusion Tables query: #{query}"
-          fusion_tables_query(query, callback, error_callback)
-        success: (data) ->
-          console.log data
-          if callback?
-            callback(data)
+update_results = (username, username_included) ->
+  if username_included
+    $('#results').append($('<div/>',{class: 'alert alert-danger', role: 'alert'}).text("The username \"#{username}\" was included in the data dump."))
+  else
+    $('#results').append($('<div/>',{class: 'alert alert-success', role: 'alert'}).text("The username \"#{username}\" was not included in the data dump."))
 
 process_username = (username) ->
   $('#results').empty()
   hashed_username = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash("#{username}-#{HASH_SALT}".toLowerCase()))
-  fusion_tables_query "SELECT username FROM #{OKC_TABLE_ID} WHERE username = #{fusion_tables_escape(hashed_username)}",
-    (data) ->
-      if data.rows?
-        $('#results').append($('<div/>',{class: 'alert alert-danger', role: 'alert'}).text("The username \"#{username}\" was included in the data dump."))
-      else
-        $('#results').append($('<div/>',{class: 'alert alert-success', role: 'alert'}).text("The username \"#{username}\" was not included in the data dump."))
+  if OKC_HASHED_USERNAMES.length
+    update_results(username, (hashed_username in OKC_HASHED_USERNAMES))
+  else
+    $.ajax 'okc.csv',
+      type: 'GET'
+      dataType: 'text'
+      error: (jqXHR, textStatus, error_callback) ->
+        console.log jqXHR
+        console.log errorThrown
+        console.log "AJAX Error: #{textStatus}"
+        $('#results').append($('<div/>',{class: 'alert alert-danger', role: 'alert'}).text("Error loading username data."))
+      success: (data) ->
+        OKC_HASHED_USERNAMES = data.split("\n")
+        update_results(username, (hashed_username in OKC_HASHED_USERNAMES))
 
 find_matches = ->
   process_username($('#identifier_input').val())
